@@ -57,7 +57,7 @@ public class Main {
 			calc= calc+ dist[pop[i-1]][pop[i]];
 		}
 		return calc;
-	}
+	} 
 
 	public static void main(String[] args) {
 		int test[] = {3, 4, 2, 5, 1 };
