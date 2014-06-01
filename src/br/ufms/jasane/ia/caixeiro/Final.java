@@ -131,15 +131,72 @@ public class Final {
 		return tres;
 	}
 
+	
 	public static int[] cruzamento(int[] v1, int[] v2) {
 		int resultado[] = new int[5];
-		int divisao = aleatorio.nextInt(5);
+		int divisao = 0;
+		do {
+			divisao = aleatorio.nextInt(5);
+		} while (divisao == 0);
 
-		for (int i = 0, k = v1.length - 1; i <= divisao; i++, k--) {
+		for (int i = 0; i < divisao; i++) {
 			resultado[i] = v1[i];
-			resultado[k] = v2[k];
 		}
+		for (int i = v2.length-1; i >= divisao; i--) {
+			resultado[i] = v2[i];
+		}
+		
+		for (int i = 0, a = 0; i < resultado.length; i++) {
+			for (int j = 0; j < resultado.length; j++) {
+				if (!(i == j)) {
+					sort[resultado[i]] = 1;
+					if (resultado[i] == resultado[j]) {
+						a = new Random().nextInt(100) % 2;
+						switch (a) {
+						case 0:
+							resultado[i] = 0;
+							sort[resultado[i]] = 0;
+							break;
+						case 1:
+							resultado[j] = 0;
+							sort[resultado[j]] = 0;
+							break;
+						}
+					}
+					
+				}
+			}
+		}
+		for (int j = 0; j < resultado.length; j++) {
 
+			int a = new Random().nextInt(100) % 2;
+			if (resultado[j] == 0) {
+				switch (a) {
+				case 1:
+					for (int i = 1; i < sort.length; i++) {
+						if (sort[i] == 0) {
+							resultado[j] = i;
+							sort[i] = 1;
+							break;
+						}
+					}
+					break;
+
+				case 0:
+					for (int i = sort.length-1; i >= 1; i--) {
+						if (sort[i] == 0) {
+							resultado[j] = i;
+							sort[i] = 1;
+							break;
+
+						}
+					}
+					break;
+				}
+			}
+		}
+		
+		Arrays.fill(sort, 0);
 		return resultado;
 	}
 }
