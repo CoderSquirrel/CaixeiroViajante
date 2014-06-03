@@ -8,6 +8,7 @@ public class Final {
 	 * Tamanho maximo
 	 */
 	static final int MAX = 30;
+
 	/**
 	 * Tabela de distancias
 	 */
@@ -26,15 +27,18 @@ public class Final {
 	/**
 	 * Matriz onde são salvos a posição do trajeto na matriz vs e sua soma
 	 */
-	static int trajeto[][] = new int[MAX][2];
+	// static int trajeto[][] = new int[MAX][2];
+
 	/**
 	 * @see {@link criar()}
 	 */
 	static int sort[] = { 0, 0, 0, 0, 0, 0 };
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		for (int i = 0; i < MAX; i++) {
+			vs[i] = criar();
+		}
+		vs = selecao(vs);
 	}
 
 	/**
@@ -61,6 +65,21 @@ public class Final {
 		}
 		Arrays.fill(sort, 0);
 		return nPop;
+	}
+
+	public static int[][] selecao(int populacao[][]) {
+		int proxVs[][] = new int[MAX][6];
+		int trajeto[][] = new int[MAX][2];
+		for (int i = 0; i < MAX; i++) {
+			trajeto[i][0] = i;
+			trajeto[i][1] = calcularDistancia(populacao[i]);
+		}
+		int[][] k = sort(trajeto);
+		// Os 5 trajetos com menor distancia vão para a proxima população
+		for (int i = 0; i < 5; i++) {
+			proxVs[i] = populacao[k[i][0]];
+		}
+		return proxVs;
 	}
 
 	/**
@@ -131,21 +150,36 @@ public class Final {
 		return tres;
 	}
 
-	
+	/**
+	 * <b>divisao</b> lugar do vetor que sera o limite para heranca <br />
+	 * <b>Passo 1</b> Cada parte do vetor, delimitado pela variavel divisao,
+	 * recebe a parte correspondente dos vetores v1 e v2. <br />
+	 * <b>Passo 2</b> As duplicidades são encontradas e decididas de maneira
+	 * aleatoria qual dos dois numeros serão mantidos ou zerados. <br />
+	 * <b>Passo 3</b> Verifica-se quais são os numeros possiveis de serem
+	 * colocados nas posições zeradas para completas o vetor. <br />
+	 * 
+	 * @param v1
+	 *            vetor de trajeto "pai"
+	 * @param v2
+	 *            vetor de trajeto "mae"
+	 * @return <b>resultado</b> vetor filho
+	 */
 	public static int[] cruzamento(int[] v1, int[] v2) {
 		int resultado[] = new int[5];
 		int divisao = 0;
 		do {
 			divisao = aleatorio.nextInt(5);
 		} while (divisao == 0);
-
+		// Passo 1
 		for (int i = 0; i < divisao; i++) {
 			resultado[i] = v1[i];
 		}
-		for (int i = v2.length-1; i >= divisao; i--) {
+		for (int i = v2.length - 1; i >= divisao; i--) {
 			resultado[i] = v2[i];
 		}
-		
+
+		// Passo 2
 		for (int i = 0, a = 0; i < resultado.length; i++) {
 			for (int j = 0; j < resultado.length; j++) {
 				if (!(i == j)) {
@@ -163,10 +197,12 @@ public class Final {
 							break;
 						}
 					}
-					
+
 				}
 			}
 		}
+
+		// Passo 3
 		for (int j = 0; j < resultado.length; j++) {
 
 			int a = new Random().nextInt(100) % 2;
@@ -183,7 +219,7 @@ public class Final {
 					break;
 
 				case 0:
-					for (int i = sort.length-1; i >= 1; i--) {
+					for (int i = sort.length - 1; i >= 1; i--) {
 						if (sort[i] == 0) {
 							resultado[j] = i;
 							sort[i] = 1;
@@ -195,7 +231,7 @@ public class Final {
 				}
 			}
 		}
-		
+
 		Arrays.fill(sort, 0);
 		return resultado;
 	}
