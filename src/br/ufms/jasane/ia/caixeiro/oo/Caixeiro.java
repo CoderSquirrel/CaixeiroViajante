@@ -2,6 +2,7 @@ package br.ufms.jasane.ia.caixeiro.oo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public class Caixeiro {
@@ -57,15 +58,88 @@ public class Caixeiro {
 		return tj;
 	}
 
-	public static ArrayList<Trajeto> selecao(ArrayList<Trajeto> tjs) {
-		ArrayList<Trajeto> t2 = new ArrayList<Trajeto>();
-		t2 = BubbleSortByDist(tjs);
+	public static Trajeto selecao(ArrayList<Trajeto> tjs) {
+		double roleta = aleatorio.nextDouble();
+		ArrayList<Trajeto> t2 = tjs;
+		ArrayList<Double> probSelecao = new ArrayList<Double>();
+		Collections.sort(t2);
 
-		for (int i = 0; tjs.size() > 5; i++) {
-			tjs.remove(i);
+		int total = 0;
+		for (Trajeto t : t2) {
+			total = total + t.getDistancia();
+		}
+		double cem = 0.0;
+		for (Trajeto t : t2) {
+			double dv = (double) t.getDistancia() / total;
+			cem = cem + dv;
+			probSelecao.add(dv);
+			// System.out.println("\t\t\t" + t.getDistancia() + "\t" + dv);
+		}
+		// System.out.println(cem);
+		Trajeto retorno = tjs.get(tjs.size() - 1);
+		// System.out.println("Roleta " + roleta);
+		for (int i = 0; i < probSelecao.size(); i++) {
+			if (probSelecao.get(i) < roleta) {
+				retorno = tjs.get(i);
+				// System.out.println("\t\t\t" + retorno.getDistancia()
+				// + " foi selecionado com " + probSelecao.get(i));
+				break;
+			}
 		}
 
-		return t2;
+		return retorno;
+	}
+
+	public static Trajeto selecaoRoleta(ArrayList<Trajeto> tjs) {
+		// float[] posicoes = new float[tjs.size()];
+		float roleta = aleatorio.nextFloat();
+		int amostra[] = new int[tjs.size()];
+		float[] probs = new float[tjs.size()];
+
+		ArrayList<Trajeto> t2 = tjs;
+		Collections.sort(t2);
+
+		int total = 0;
+		int ultimo = tjs.get(tjs.size() - 1).getDistancia();
+
+		// Espaco amostra imaginaria
+		for (int p = 0; p < tjs.size(); p++) {
+			amostra[p] = ultimo - tjs.get(p).getDistancia();
+			total = total + amostra[p];
+		}
+
+		// probabiliade
+		for (int p = 0; p < tjs.size(); p++) {
+			probs[p] = (float) amostra[p] / total;
+			// System.out.println(probs[p]);
+		}
+
+		// escolher
+		float somaFinal = 0;
+		// System.out.println("Roleta " + roleta);
+		for (int p = 0; p < tjs.size(); p++) {
+			int prox = p > 1 ? p - 1 : p;
+			if (roleta > somaFinal) {
+				if (roleta < (somaFinal + probs[prox])) {
+//					System.out.println("Escoliho " + tjs.get(p).getDistancia()
+//							+ " Porcentagem " + probs[p] + " Roleta " + roleta
+//							+ " Numero atual " + somaFinal + " Proximo "
+//							+ (somaFinal + probs[prox]));
+					return tjs.get(p);
+				} else if (p == 0) {
+//					System.out.println("Escoliho" + tjs.get(p).getDistancia()
+//							+ " Porcentagem " + probs[p] + " Roleta " + roleta
+//							+ " Numero atual " + somaFinal);
+
+					return tjs.get(p);
+				}
+			}
+
+			somaFinal += probs[p];
+		}
+		// System.out.println(somaFinal);
+		return null;
+
 	}
 
 	public static ArrayList<Trajeto> BubbleSortByDist(ArrayList<Trajeto> tjs) {
@@ -89,7 +163,7 @@ public class Caixeiro {
 
 		return tjs;
 	}
-	
+
 	public static Trajeto cruzamento(Trajeto v1, Trajeto v2) {
 		int resultado[] = new int[5];
 		int divisao = 0;
@@ -160,6 +234,5 @@ public class Caixeiro {
 		Arrays.fill(sort, 0);
 		return new Trajeto(resultado);
 	}
-	
-	
+
 }
