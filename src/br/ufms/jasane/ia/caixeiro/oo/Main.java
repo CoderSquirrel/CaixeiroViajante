@@ -16,7 +16,9 @@ public class Main {
 	static int TAXA_MUTACAO = 4;
 	static int TAXA_CRUZAMENTO = 3;
 	static int TAXA_SELECAO = 5;
-
+	static int MINIMO = 5;
+	static int POPULACAO_INICIAL = 7;
+	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 
@@ -24,7 +26,7 @@ public class Main {
 		Random aleatorio = new Random();
 
 		// Inicio
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < POPULACAO_INICIAL; i++) {
 			populacao.add(Caixeiro.criar());
 		}
 		// Ordena a lista de trajetos do menor valor total até o maior, logo o
@@ -38,14 +40,9 @@ public class Main {
 		imprimirPopulacao(populacao);
 		ArrayList<Trajeto> popAux = new ArrayList<Trajeto>();
 		int menorDurante = 0;
-		while (menorDurante < 5) {
+		while (menorDurante < MINIMO) {
 
 			// [Selecao] Selecionar dois cromossomos de acordo com seu fitness
-			// if (aleatorio.nextInt(10) < TAXA_SELECAO) {
-			// Trajeto novo = new Trajeto(Caixeiro.selecaoRoleta(populacao)
-			// .getVetor());
-			// popAux.add(novo);
-			// }
 			System.out.println("\t\t\tHouve seleção. Taxa = "
 					+ TAXA_SELECAO + "%");
 			int taxa = aleatorio.nextInt(TAXA_SELECAO);
@@ -92,15 +89,11 @@ public class Main {
 				System.out.println("Na geração " + geracao
 						+ " a população poderia ser extinta");
 			}
-//			System.out.println("População após Selecao/Mutacao/Cruamento");
-//			imprimirPopulacao(populacao);
+			System.out.println("População após Selecao/Mutacao/Cruamento");
+			imprimirPopulacao(populacao);
 
 			geracao++;
 			imprimirPopulacao(populacao);
-			// cria nova populacao
-			// for (int i = 0; i < ; i++) {
-			// populacao.add(Caixeiro.criar());
-			// }
 		}
 
 		System.out.println("Demoraram " + geracao
